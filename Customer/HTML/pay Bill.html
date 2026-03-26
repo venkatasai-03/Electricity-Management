@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pay Bill - BillGate</title>
+<link rel="stylesheet" href="style paybill.css">
+</head>
+
+<body>
+
+<!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="logo-section">
+        <div class="logo">⚡</div>
+        <div>
+          <h2 style="margin: 0">BillGate</h2>
+          <div class="tagline">
+            One <span class="highlight">Gate</span>way. Pay Your
+            <span class="highlight">Bill</span>s.
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+      <a href="Customer_Home.html" class="active">Dashboard</a>
+      <a href="view bills.html">View Bills</a>
+      <a href="pay Bill.html" class="active">Pay Bill</a>
+      <a href="Bill History.html">Bill History</a>
+      <a href="#">Register Complaint</a>
+      <a href="#">Complaint Status</a>
+      <!-- Profile Section -->
+      <div class="profile">
+        <button class="profile-btn">👤 Profile ▾</button>
+        <div class="dropdown">
+          <a href="#">View Profile</a>
+          <a href="#">Edit Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+
+<div class="container">
+
+    <!-- Bill Summary -->
+    <h2>Bill Summary</h2>
+    <table>
+        <tr>
+            <th>Bill No</th>
+            <th>Consumer No</th>
+            <th>Amount</th>
+        </tr>
+        <tr>
+            <td>1001</td>
+            <td>1234567890123</td>
+            <td>₹2500</td>
+        </tr>
+        <tr>
+            <td>1002</td>
+            <td>1234567890123</td>
+            <td>₹2000</td>
+        </tr>
+    </table>
+
+    <div class="total">Total: ₹4500</div>
+
+    <!-- Payment Form -->
+    <h2>Card Details</h2>
+    <div class="form-grid">
+        <input type="text" id="name" placeholder="Cardholder Name">
+        <input type="text" id="card" placeholder="Card Number">
+        <input type="text" id="expiry" placeholder="MM/YY">
+        <input type="password" id="cvv" placeholder="CVV">
+    </div>
+
+    <p class="error" id="errorMsg"></p>
+
+    <button class="btn" onclick="validate()">Pay Now</button>
+
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal" id="confirmModal">
+    <div class="modal-content">
+        <p>Confirm payment of ₹4500?</p>
+        <button onclick="paySuccess()">Confirm</button>
+        <button onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
+<!-- Success Page -->
+<div class="container success-box" id="successBox">
+    <h2>Payment Successful ✅</h2>
+    <p>Payment ID: PAY12345</p>
+    <p>Transaction ID: TXN98765</p>
+    <p>Amount Paid: ₹4500</p>
+    <p>Status: SUCCESS</p>
+</div>
+ <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- About -->
+        <div class="footer-section">
+          <h3>BillGate</h3>
+          <p>
+            Smart platform to manage electricity bills, payments, and complaints
+            easily.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <p><a href="#">Dashboard</a></p>
+          <p><a href="#">View Bills</a></p>
+          <p><a href="#">Pay Bill</a></p>
+          <p><a href="#">Complaints</a></p>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>Email: support@billgate.com</p>
+          <p>Phone: +91 9876543210</p>
+        </div>
+
+        <!-- Social -->
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <p><a href="#">Facebook</a></p>
+          <p><a href="#">Twitter</a></p>
+          <p><a href="#">LinkedIn</a></p>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
+    </footer>
+<script>
+function validate() {
+    let name = document.getElementById("name").value;
+    let card = document.getElementById("card").value;
+    let expiry = document.getElementById("expiry").value;
+    let cvv = document.getElementById("cvv").value;
+    let error = document.getElementById("errorMsg");
+
+    error.innerHTML = "";
+
+    if (!name || !card || !expiry || !cvv) {
+        error.innerHTML = "All fields are required";
+        return;
+    }
+
+    if (!/^\d{16}$/.test(card)) {
+        error.innerHTML = "Card number must be 16 digits";
+        return;
+    }
+
+    if (!/^\d{3}$/.test(cvv)) {
+        error.innerHTML = "CVV must be 3 digits";
+        return;
+    }
+
+    document.getElementById("confirmModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("confirmModal").style.display = "none";
+}
+
+function paySuccess() {
+    document.getElementById("confirmModal").style.display = "none";
+    document.querySelector(".container").style.display = "none";
+    document.getElementById("successBox").style.display = "block";
+}
+</script>
+
+</body>
+</html>

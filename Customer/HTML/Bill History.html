@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bill History - BillGate</title>
+<link rel="stylesheet" href="style_Bill History.css">
+</head>
+
+<body>
+
+<!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="logo-section">
+        <div class="logo">⚡</div>
+        <div>
+          <h2 style="margin: 0">BillGate</h2>
+          <div class="tagline">
+            One <span class="highlight">Gate</span>way. Pay Your
+            <span class="highlight">Bill</span>s.
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+      <a href="Customer_Home.html" class="active">Dashboard</a>
+      <a href="view bills.html">View Bills</a>
+      <a href="pay Bill.html">Pay Bill</a>
+      <a href="Bill History.html" class="active">Bill History</a>
+      <a href="#">Register Complaint</a>
+      <a href="#">Complaint Status</a>
+      <!-- Profile Section -->
+      <div class="profile">
+        <button class="profile-btn">👤 Profile ▾</button>
+        <div class="dropdown">
+          <a href="#">View Profile</a>
+          <a href="#">Edit Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+
+<!-- Main -->
+<div class="container">
+
+    <!-- Filters -->
+    <div class="filters">
+        <input type="date" id="fromDate">
+        <input type="date" id="toDate">
+
+        <select id="statusFilter">
+            <option value="all">All</option>
+            <option value="paid">Paid</option>
+            <option value="unpaid">Unpaid</option>
+        </select>
+
+        <select id="sortBy">
+            <option value="date">Bill Date</option>
+            <option value="amount">Amount</option>
+        </select>
+
+        <button onclick="applyFilters()">Apply</button>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary">
+        <div>Total Bills: <span id="totalBills">0</span></div>
+        <div>Paid: <span id="paidCount">0</span></div>
+        <div>Unpaid: <span id="unpaidCount">0</span></div>
+        <div>Total Paid: ₹ <span id="totalAmount">0</span></div>
+    </div>
+
+    <!-- Table -->
+    <table id="billTable">
+        <thead>
+            <tr>
+                <th>Bill No</th>
+                <th>Bill Date</th>
+                <th>Period</th>
+                <th>Due Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Payment Date</th>
+                <th>Mode</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will come from JS -->
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Footer -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- About -->
+        <div class="footer-section">
+          <h3>BillGate</h3>
+          <p>
+            Smart platform to manage electricity bills, payments, and complaints
+            easily.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <p><a href="#">Dashboard</a></p>
+          <p><a href="#">View Bills</a></p>
+          <p><a href="#">Pay Bill</a></p>
+          <p><a href="#">Complaints</a></p>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>Email: support@billgate.com</p>
+          <p>Phone: +91 9876543210</p>
+        </div>
+
+        <!-- Social -->
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <p><a href="#">Facebook</a></p>
+          <p><a href="#">Twitter</a></p>
+          <p><a href="#">LinkedIn</a></p>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
+    </footer>
+
+<script>
+    const bills = [
+        {no:101, date:"2026-01-10", period:"Dec-Jan", due:"2026-01-20", amount:1200, status:"paid", payDate:"2026-01-15", mode:"UPI"},
+        {no:102, date:"2026-02-10", period:"Jan-Feb", due:"2026-02-20", amount:1500, status:"unpaid", payDate:"-", mode:"-"},
+        {no:103, date:"2026-03-10", period:"Feb-Mar", due:"2026-03-20", amount:1800, status:"paid", payDate:"2026-03-18", mode:"Card"}
+    ];
+
+    function renderTable(data) {
+        const tbody = document.querySelector("#billTable tbody");
+        tbody.innerHTML = "";
+
+        let paid = 0, unpaid = 0, totalAmount = 0;
+
+        data.forEach(b => {
+            if(b.status === "paid") {
+                paid++;
+                totalAmount += b.amount;
+            } else {
+                unpaid++;
+            }
+
+            const row = `
+                <tr>
+                    <td>${b.no}</td>
+                    <td>${b.date}</td>
+                    <td>${b.period}</td>
+                    <td>${b.due}</td>
+                    <td>₹${b.amount}</td>
+                    <td class="${b.status}">${b.status}</td>
+                    <td>${b.payDate}</td>
+                    <td>${b.mode}</td>
+                    <td>
+                        <button class="action-btn view">View</button>
+                        <button class="action-btn download">PDF</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        document.getElementById("totalBills").innerText = data.length;
+        document.getElementById("paidCount").innerText = paid;
+        document.getElementById("unpaidCount").innerText = unpaid;
+        document.getElementById("totalAmount").innerText = totalAmount;
+    }
+
+    function applyFilters() {
+        const status = document.getElementById("statusFilter").value;
+
+        let filtered = bills;
+
+        if(status !== "all") {
+            filtered = bills.filter(b => b.status === status);
+        }
+
+        renderTable(filtered);
+    }
+
+    renderTable(bills);
+</script>
+
+</body>
+</html>

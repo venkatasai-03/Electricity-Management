@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>View Bills</title>
+<link rel="stylesheet" href="style_view bills.css">
+
+</head>
+
+<body>
+
+<!-- Header -->
+
+<!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="logo-section">
+        <div class="logo">⚡</div>
+        <div>
+          <h2 style="margin: 0">BillGate</h2>
+          <div class="tagline">
+            One <span class="highlight">Gate</span>way. Pay Your
+            <span class="highlight">Bill</span>s.
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+      <a href="Customer_Home.html" class="active">Dashboard</a>
+      <a href="view bills.html" class="active">View Bills</a>
+      <a href="pay Bill.html">Pay Bill</a>
+      <a href="Bill History.html">Bill History</a>
+      <a href="#">Register Complaint</a>
+      <a href="#">Complaint Status</a>
+      <!-- Profile Section -->
+      <div class="profile">
+        <button class="profile-btn">👤 Profile ▾</button>
+        <div class="dropdown">
+          <a href="#">View Profile</a>
+          <a href="#">Edit Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+<div class="container">
+
+<h2>View & Pay Bills</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><input type="checkbox" id="selectAll"></th>
+      <th>Bill No</th>
+      <th>Consumer No</th>
+      <th>Status</th>
+      <th>Type</th>
+      <th>Bill Date</th>
+      <th>Due Date</th>
+      <th>Amount</th>
+      <th>Pay</th>
+    </tr>
+  </thead>
+
+  <tbody id="billTable">
+
+    <tr>
+      <td><input type="checkbox" class="bill-checkbox" data-amount="2000"></td>
+      <td>101</td>
+      <td>123456</td>
+      <td class="unpaid">Unpaid</td>
+      <td>Domestic</td>
+      <td>01 Mar</td>
+      <td>10 Mar</td>
+      <td>₹2000</td>
+      <td><input type="number" value="2000"></td>
+    </tr>
+
+    <tr>
+      <td><input type="checkbox" disabled></td>
+      <td>102</td>
+      <td>123456</td>
+      <td class="paid">Paid</td>
+      <td>Domestic</td>
+      <td>01 Feb</td>
+      <td>10 Feb</td>
+      <td>₹1500</td>
+      <td>—</td>
+    </tr>
+
+    <tr>
+      <td><input type="checkbox" class="bill-checkbox" data-amount="3000"></td>
+      <td>103</td>
+      <td>123456</td>
+      <td class="unpaid">Unpaid</td>
+      <td>Commercial</td>
+      <td>01 Jan</td>
+      <td>10 Jan</td>
+      <td>₹3000</td>
+      <td><input type="number" value="3000"></td>
+    </tr>
+
+  </tbody>
+</table>
+
+<!-- Bottom Section -->
+<div class="total-section">
+  <h3>Total Payable: ₹ <span id="totalAmount">0</span></h3>
+  <button id="payBtn" disabled>Pay Total</button>
+</div>
+
+</div>
+
+<!-- Footer -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- About -->
+        <div class="footer-section">
+          <h3>BillGate</h3>
+          <p>
+            Smart platform to manage electricity bills, payments, and complaints
+            easily.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <p><a href="#">Dashboard</a></p>
+          <p><a href="#">View Bills</a></p>
+          <p><a href="#">Pay Bill</a></p>
+          <p><a href="#">Complaints</a></p>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>Email: support@billgate.com</p>
+          <p>Phone: +91 9876543210</p>
+        </div>
+
+        <!-- Social -->
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <p><a href="#">Facebook</a></p>
+          <p><a href="#">Twitter</a></p>
+          <p><a href="#">LinkedIn</a></p>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
+    </footer>
+
+<script>
+const checkboxes = document.querySelectorAll(".bill-checkbox");
+const totalDisplay = document.getElementById("totalAmount");
+const payBtn = document.getElementById("payBtn");
+const selectAll = document.getElementById("selectAll");
+
+function updateTotal() {
+  let total = 0;
+
+  checkboxes.forEach(cb => {
+    if (cb.checked) {
+      total += parseInt(cb.getAttribute("data-amount"));
+    }
+  });
+
+  totalDisplay.innerText = total;
+  payBtn.disabled = total === 0;
+}
+
+// Individual checkbox
+checkboxes.forEach(cb => {
+  cb.addEventListener("change", updateTotal);
+});
+
+// Select all
+selectAll.addEventListener("change", function() {
+  checkboxes.forEach(cb => {
+    if (!cb.disabled) {
+      cb.checked = this.checked;
+    }
+  });
+  updateTotal();
+});
+
+
+
+</script>
+
+</body>
+</html>

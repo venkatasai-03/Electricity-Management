@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Complaint Status</title>
+<link rel="stylesheet" href="style_complaint status.css">
+
+
+</head>
+<body>
+
+<!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="logo-section">
+        <div class="logo">⚡</div>
+        <div>
+          <h2 style="margin: 0">BillGate</h2>
+          <div class="tagline">
+            One <span class="highlight">Gate</span>way. Pay Your
+            <span class="highlight">Bill</span>s.
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+      <a href="Customer_Home.html" class="active">Dashboard</a>
+      <a href="view bills.html">View Bills</a>
+      <a href="pay Bill.html">Pay Bill</a>
+      <a href="Bill History.html">Bill History</a>
+      <a href="Register complaint.html">Register Complaint</a>
+      <a href="Complaint Status.html" class="active">Complaint Status</a>
+      <!-- Profile Section -->
+      <div class="profile">
+        <button class="profile-btn">👤 Profile ▾</button>
+        <div class="dropdown">
+          <a href="#">View Profile</a>
+          <a href="#">Edit Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+
+<div class="container">
+
+  <h2>Complaint Status</h2>
+
+  <!-- Search -->
+  <input type="text" id="complaintId" placeholder="Enter Complaint ID">
+  <button onclick="searchComplaint()">Search</button>
+
+  <div id="errorMsg" class="error"></div>
+
+  <!-- Table -->
+  <table id="complaintTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <!-- Card -->
+  <div id="resultCard" class="card"></div>
+
+</div>
+<!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- About -->
+        <div class="footer-section">
+          <h3>BillGate</h3>
+          <p>
+            Smart platform to manage electricity bills, payments, and complaints
+            easily.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <p><a href="#">Dashboard</a></p>
+          <p><a href="#">View Bills</a></p>
+          <p><a href="#">Pay Bill</a></p>
+          <p><a href="#">Complaints</a></p>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>Email: support@billgate.com</p>
+          <p>Phone: +91 9876543210</p>
+        </div>
+
+        <!-- Social -->
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <p><a href="#">Facebook</a></p>
+          <p><a href="#">Twitter</a></p>
+          <p><a href="#">LinkedIn</a></p>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
+    </footer>
+
+<script>
+
+const complaints = [
+  { id: "C101", type: "Power Outage", date: "20 Mar 2026", status: "In Progress", description: "No electricity since morning" },
+  { id: "C102", type: "Billing Issue", date: "18 Mar 2026", status: "Resolved", description: "Incorrect bill amount" },
+  { id: "C103", type: "Meter Issue", date: "15 Mar 2026", status: "Pending", description: "Meter not working properly" },
+  { id: "C104", type: "Voltage Issue", date: "10 Mar 2026", status: "Closed", description: "High voltage fluctuations" }
+];
+
+// Load table initially
+function loadTable() {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+
+  complaints.forEach(c => {
+    let statusClass = getStatusClass(c.status);
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${c.id}</td>
+        <td>${c.type}</td>
+        <td>${c.date}</td>
+        <td class="${statusClass}">${c.status}</td>
+      </tr>
+    `;
+  });
+}
+
+function getStatusClass(status) {
+  if (status === "Pending") return "pending";
+  if (status === "In Progress") return "progress";
+  if (status === "Resolved") return "resolved";
+  return "closed";
+}
+
+// Search
+function searchComplaint() {
+  const id = document.getElementById("complaintId").value.trim();
+  const card = document.getElementById("resultCard");
+  const table = document.getElementById("complaintTable");
+  const error = document.getElementById("errorMsg");
+
+  card.style.display = "none";
+  error.innerHTML = "";
+
+  if (id === "") {
+    table.style.display = "table";
+    return;
+  }
+
+  const complaint = complaints.find(c => c.id === id);
+
+  if (complaint) {
+    let statusClass = getStatusClass(complaint.status);
+
+    card.innerHTML = `
+      <h3>Complaint Details</h3>
+      <p><b>ID:</b> ${complaint.id}</p>
+      <p><b>Type:</b> ${complaint.type}</p>
+      <p><b>Date:</b> ${complaint.date}</p>
+      <p class="${statusClass}"><b>Status:</b> ${complaint.status}</p>
+      <p><b>Description:</b> ${complaint.description}</p>
+    `;
+
+    table.style.display = "none";
+    card.style.display = "block";
+
+  } else {
+    table.style.display = "none";
+    error.innerHTML = "❌ Complaint not found";
+  }
+}
+
+// Initial load
+loadTable();
+
+</script>
+
+</body>
+</html>

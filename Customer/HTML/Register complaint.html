@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register Complaint</title>
+
+<link rel="stylesheet" href="style_Register complaint.css">
+</head>
+
+<body>
+
+<!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="logo-section">
+        <div class="logo">⚡</div>
+        <div>
+          <h2 style="margin: 0">BillGate</h2>
+          <div class="tagline">
+            One <span class="highlight">Gate</span>way. Pay Your
+            <span class="highlight">Bill</span>s.
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+      <a href="Customer_Home.html" class="active">Dashboard</a>
+      <a href="view bills.html">View Bills</a>
+      <a href="pay Bill.html">Pay Bill</a>
+      <a href="Bill History.html">Bill History</a>
+      <a href="Register complaint.html">Register Complaint</a>
+      <a href="Complaint Status.html">Complaint Status</a>
+      <!-- Profile Section -->
+      <div class="profile">
+        <button class="profile-btn">👤 Profile ▾</button>
+        <div class="dropdown">
+          <a href="#">View Profile</a>
+          <a href="#">Edit Profile</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+
+<!-- Main -->
+<div class="main">
+    <div class="form-card">
+        <h2>Register Complaint</h2>
+
+        <form id="complaintForm">
+
+            <div class="form-group">
+                <label>Complaint Type</label>
+                <select id="complaintType">
+                    <option value="">Select</option>
+                    <option value="billing">Billing Issue</option>
+                    <option value="power">Power Issue</option>
+                    <option value="meter">Meter Issue</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select id="category">
+                    <option value="">Select Category</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" placeholder="Describe your issue..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Preferred Contact Method</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="contact" value="email"> Email</label>
+                    <label><input type="radio" name="contact" value="phone"> Phone</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Contact Details</label>
+                <input type="text" id="contactDetails" placeholder="Enter email or phone">
+            </div>
+
+            <div class="buttons">
+                <button type="submit" class="submit-btn">Submit</button>
+                <button type="reset" class="reset-btn">Reset</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- About -->
+        <div class="footer-section">
+          <h3>BillGate</h3>
+          <p>
+            Smart platform to manage electricity bills, payments, and complaints
+            easily.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <p><a href="#">Dashboard</a></p>
+          <p><a href="#">View Bills</a></p>
+          <p><a href="#">Pay Bill</a></p>
+          <p><a href="#">Complaints</a></p>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>Email: support@billgate.com</p>
+          <p>Phone: +91 9876543210</p>
+        </div>
+
+        <!-- Social -->
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <p><a href="#">Facebook</a></p>
+          <p><a href="#">Twitter</a></p>
+          <p><a href="#">LinkedIn</a></p>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
+    </footer>
+
+<!-- Popup -->
+<div class="popup" id="popup">
+    <h3>Complaint Registered Successfully!</h3>
+    <p id="complaintInfo"></p>
+    <button onclick="closePopup()">OK</button>
+</div>
+
+<script>
+// Dynamic Categories
+const categoryMap = {
+    billing: ["Wrong Bill", "Late Fee Issue"],
+    power: ["No Power", "Frequent Cuts"],
+    meter: ["Meter Not Working", "Reading Issue"]
+};
+
+document.getElementById("complaintType").addEventListener("change", function() {
+    let type = this.value;
+    let category = document.getElementById("category");
+
+    category.innerHTML = '<option value="">Select Category</option>';
+
+    if (categoryMap[type]) {
+        categoryMap[type].forEach(item => {
+            let option = document.createElement("option");
+            option.text = item;
+            category.add(option);
+        });
+    }
+});
+
+// Form Submit
+document.getElementById("complaintForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let type = document.getElementById("complaintType").value;
+    let category = document.getElementById("category").value;
+    let desc = document.getElementById("description").value;
+    let contact = document.querySelector('input[name="contact"]:checked');
+    let details = document.getElementById("contactDetails").value;
+
+    if (!type || !category || !desc || !contact || !details) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    if (desc.length < 10) {
+        alert("Description must be at least 10 characters");
+        return;
+    }
+
+    // Generate Complaint ID
+    let complaintId = "CMP" + Math.floor(Math.random() * 100000);
+
+    document.getElementById("complaintInfo").innerHTML =
+        "Complaint ID: " + complaintId + "<br>" +
+        "Type: " + type + "<br>" +
+        "Category: " + category;
+
+    document.getElementById("popup").style.display = "block";
+});
+
+// Close Popup
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+</script>
+
+</body>
+</html>

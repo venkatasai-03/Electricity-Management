@@ -1,14 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Pay Bill - BillGate</title>
-<link rel="stylesheet" href="style paybill.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pay Bill - BillGate</title>
+    <link rel="stylesheet" href="style paybill.css" />
+  </head>
 
-<body>
-
-<!-- Top Navbar -->
+  <body>
+    <!-- Top Navbar -->
     <div class="top-navbar">
       <div class="logo-section">
         <div class="logo">⚡</div>
@@ -43,63 +42,61 @@
       </div>
     </div>
 
-<div class="container">
-
-    <!-- Bill Summary -->
-    <h2>Bill Summary</h2>
-    <table>
+    <div class="container">
+      <!-- Bill Summary -->
+      <h2>Bill Summary</h2>
+      <table>
         <tr>
-            <th>Bill No</th>
-            <th>Consumer No</th>
-            <th>Amount</th>
+          <th>Bill No</th>
+          <th>Consumer No</th>
+          <th>Amount</th>
         </tr>
         <tr>
-            <td>1001</td>
-            <td>1234567890123</td>
-            <td>₹2500</td>
+          <td>1001</td>
+          <td>1234567890123</td>
+          <td>₹2500</td>
         </tr>
         <tr>
-            <td>1002</td>
-            <td>1234567890123</td>
-            <td>₹2000</td>
+          <td>1002</td>
+          <td>1234567890123</td>
+          <td>₹2000</td>
         </tr>
-    </table>
+      </table>
 
-    <div class="total">Total: ₹4500</div>
+      <div class="total">Total: ₹4500</div>
 
-    <!-- Payment Form -->
-    <h2>Card Details</h2>
-    <div class="form-grid">
-        <input type="text" id="name" placeholder="Cardholder Name">
-        <input type="text" id="card" placeholder="Card Number">
-        <input type="text" id="expiry" placeholder="MM/YY">
-        <input type="password" id="cvv" placeholder="CVV">
+      <!-- Payment Form -->
+      <h2>Card Details</h2>
+      <div class="form-grid">
+        <input type="text" id="name" placeholder="Cardholder Name" />
+        <input type="text" id="card" placeholder="Card Number" />
+        <input type="text" id="expiry" placeholder="MM/YY" />
+        <input type="password" id="cvv" placeholder="CVV" />
+      </div>
+
+      <p class="error" id="errorMsg"></p>
+
+      <button class="btn" onclick="validate()">Pay Now</button>
     </div>
 
-    <p class="error" id="errorMsg"></p>
-
-    <button class="btn" onclick="validate()">Pay Now</button>
-
-</div>
-
-<!-- Confirmation Modal -->
-<div class="modal" id="confirmModal">
-    <div class="modal-content">
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+      <div class="modal-content">
         <p>Confirm payment of ₹4500?</p>
         <button onclick="paySuccess()">Confirm</button>
         <button onclick="closeModal()">Cancel</button>
+      </div>
     </div>
-</div>
 
-<!-- Success Page -->
-<div class="container success-box" id="successBox">
-    <h2>Payment Successful ✅</h2>
-    <p>Payment ID: PAY12345</p>
-    <p>Transaction ID: TXN98765</p>
-    <p>Amount Paid: ₹4500</p>
-    <p>Status: SUCCESS</p>
-</div>
- <!-- Footer -->
+    <!-- Success Page -->
+    <div class="container success-box" id="successBox">
+      <h2>Payment Successful ✅</h2>
+      <p>Payment ID: PAY12345</p>
+      <p>Transaction ID: TXN98765</p>
+      <p>Amount Paid: ₹4500</p>
+      <p>Status: SUCCESS</p>
+    </div>
+    <!-- Footer -->
     <footer class="footer">
       <div class="footer-container">
         <!-- About -->
@@ -139,44 +136,78 @@
       <!-- Bottom -->
       <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
     </footer>
-<script>
-function validate() {
-    let name = document.getElementById("name").value;
-    let card = document.getElementById("card").value;
-    let expiry = document.getElementById("expiry").value;
-    let cvv = document.getElementById("cvv").value;
-    let error = document.getElementById("errorMsg");
+    <script>
+      function validate() {
+        let name = document.getElementById("name").value;
+        let card = document.getElementById("card").value;
+        let expiry = document.getElementById("expiry").value;
+        let cvv = document.getElementById("cvv").value;
+        let error = document.getElementById("errorMsg");
 
-    error.innerHTML = "";
+        let errorMessages = [];
 
-    if (!name || !card || !expiry || !cvv) {
-        error.innerHTML = "All fields are required";
-        return;
-    }
+        // Required fields
+        if (!name || !card || !expiry || !cvv) {
+          errorMessages.push("All fields are required");
+        }
 
-    if (!/^\d{16}$/.test(card)) {
-        error.innerHTML = "Card number must be 16 digits";
-        return;
-    }
 
-    if (!/^\d{3}$/.test(cvv)) {
-        error.innerHTML = "CVV must be 3 digits";
-        return;
-    }
+        if (name && !/^[a-zA-Z\s]{2,16}$/.test(name)) {
+          errorMessages.push("Name can only contain letters and spaces and must be 2-16 characters");
+        }
+        // Card validation
+        if (card && !/^\d{16}$/.test(card)) {
+          errorMessages.push("Card number must be 16 digits");
+        }
 
-    document.getElementById("confirmModal").style.display = "block";
-}
+        // Expiry format
+        if (expiry && !/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
+          errorMessages.push("Expiry must be in MM/YY format");
+        }
 
-function closeModal() {
-    document.getElementById("confirmModal").style.display = "none";
-}
+        // Expiry not expired
+        if (expiry && /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
+          let parts = expiry.split("/");
+          let month = parseInt(parts[0]);
+          let year = parseInt("20" + parts[1]);
 
-function paySuccess() {
-    document.getElementById("confirmModal").style.display = "none";
-    document.querySelector(".container").style.display = "none";
-    document.getElementById("successBox").style.display = "block";
-}
-</script>
+          let now = new Date();
+          let currentMonth = now.getMonth() + 1;
+          let currentYear = now.getFullYear();
 
-</body>
+          if (
+            year < currentYear ||
+            (year === currentYear && month < currentMonth)
+          ) {
+            errorMessages.push("Card is expired");
+          }
+        }
+
+        // CVV validation
+        if (cvv && !/^\d{3}$/.test(cvv)) {
+          errorMessages.push("CVV must be 3 digits");
+        }
+
+        // Show all errors
+        if (errorMessages.length > 0) {
+          error.innerHTML = errorMessages.join("<br>");
+          return;
+        }
+
+        // If no errors
+        error.innerHTML = "";
+        document.getElementById("confirmModal").style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("confirmModal").style.display = "none";
+      }
+
+      function paySuccess() {
+        document.getElementById("confirmModal").style.display = "none";
+        document.querySelector(".container").style.display = "none";
+        document.getElementById("successBox").style.display = "block";
+      }
+    </script>
+  </body>
 </html>

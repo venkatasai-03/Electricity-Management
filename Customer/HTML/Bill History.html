@@ -1,14 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Bill History - BillGate</title>
-<link rel="stylesheet" href="style_Bill History.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bill History - BillGate</title>
+    <link rel="stylesheet" href="style_Bill History.css" />
+  </head>
 
-<body>
-
-<!-- Top Navbar -->
+  <body>
+    <!-- Top Navbar -->
     <div class="top-navbar">
       <div class="logo-section">
         <div class="logo">⚡</div>
@@ -43,59 +42,58 @@
       </div>
     </div>
 
-<!-- Main -->
-<div class="container">
+    <!-- Main -->
+    <div class="container">
+      <!-- Filters -->
+      <div class="filters">
+        <input type="date" id="fromDate" placeholder="Start Date" />
+<input type="date" id="toDate" placeholder="End Date" />
 
-    <!-- Filters -->
-    <div class="filters">
-        <input type="date" id="fromDate">
-        <input type="date" id="toDate">
+<select id="statusFilter">
+  <option value="all">All Status</option>
+  <option value="paid">Paid</option>
+  <option value="unpaid">Unpaid</option>
+</select>
 
-        <select id="statusFilter">
-            <option value="all">All</option>
-            <option value="paid">Paid</option>
-            <option value="unpaid">Unpaid</option>
-        </select>
-
-        <select id="sortBy">
-            <option value="date">Bill Date</option>
-            <option value="amount">Amount</option>
-        </select>
+<select id="sortBy">
+  <option value="">Select</option>
+  <option value="date">Bill Date</option>
+  <option value="amount">Amount</option>
+</select>   
 
         <button onclick="applyFilters()">Apply</button>
-    </div>
+      </div>
 
-    <!-- Summary -->
-    <div class="summary">
+      <!-- Summary -->
+      <div class="summary">
         <div>Total Bills: <span id="totalBills">0</span></div>
         <div>Paid: <span id="paidCount">0</span></div>
         <div>Unpaid: <span id="unpaidCount">0</span></div>
         <div>Total Paid: ₹ <span id="totalAmount">0</span></div>
-    </div>
+      </div>
 
-    <!-- Table -->
-    <table id="billTable">
+      <!-- Table -->
+      <table id="billTable">
         <thead>
-            <tr>
-                <th>Bill No</th>
-                <th>Bill Date</th>
-                <th>Period</th>
-                <th>Due Date</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Payment Date</th>
-                <th>Mode</th>
-                <th>Action</th>
-            </tr>
+          <tr>
+            <th>Bill No</th>
+            <th>Bill Date</th>
+            <th>Period</th>
+            <th>Due Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Payment Date</th>
+            <th>Mode</th>
+            <th>Action</th>
+          </tr>
         </thead>
         <tbody>
-            <!-- Data will come from JS -->
+          <!-- Data will come from JS -->
         </tbody>
-    </table>
+      </table>
+    </div>
 
-</div>
-
-<!-- Footer -->
+    <!-- Footer -->
 
     <!-- Footer -->
     <footer class="footer">
@@ -138,28 +136,57 @@
       <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
     </footer>
 
-<script>
-    const bills = [
-        {no:101, date:"2026-01-10", period:"Dec-Jan", due:"2026-01-20", amount:1200, status:"paid", payDate:"2026-01-15", mode:"UPI"},
-        {no:102, date:"2026-02-10", period:"Jan-Feb", due:"2026-02-20", amount:1500, status:"unpaid", payDate:"-", mode:"-"},
-        {no:103, date:"2026-03-10", period:"Feb-Mar", due:"2026-03-20", amount:1800, status:"paid", payDate:"2026-03-18", mode:"Card"}
-    ];
+    <script>
+      const bills = [
+        {
+          no: 101,
+          date: "2026-01-10",
+          period: "Dec-Jan",
+          due: "2026-01-20",
+          amount: 1200,
+          status: "paid",
+          payDate: "2026-01-15",
+          mode: "UPI",
+        },
+        {
+          no: 102,
+          date: "2026-02-10",
+          period: "Jan-Feb",
+          due: "2026-02-20",
+          amount: 1500,
+          status: "unpaid",
+          payDate: "-",
+          mode: "-",
+        },
+        {
+          no: 103,
+          date: "2026-03-10",
+          period: "Feb-Mar",
+          due: "2026-03-20",
+          amount: 1800,
+          status: "paid",
+          payDate: "2026-03-18",
+          mode: "Card",
+        },
+      ];
 
-    function renderTable(data) {
+      function renderTable(data) {
         const tbody = document.querySelector("#billTable tbody");
         tbody.innerHTML = "";
 
-        let paid = 0, unpaid = 0, totalAmount = 0;
+        let paid = 0,
+          unpaid = 0,
+          totalAmount = 0;
 
-        data.forEach(b => {
-            if(b.status === "paid") {
-                paid++;
-                totalAmount += b.amount;
-            } else {
-                unpaid++;
-            }
+        data.forEach((b) => {
+          if (b.status === "paid") {
+            paid++;
+            totalAmount += b.amount;
+          } else {
+            unpaid++;
+          }
 
-            const row = `
+          const row = `
                 <tr>
                     <td>${b.no}</td>
                     <td>${b.date}</td>
@@ -175,29 +202,49 @@
                     </td>
                 </tr>
             `;
-            tbody.innerHTML += row;
+          tbody.innerHTML += row;
         });
 
         document.getElementById("totalBills").innerText = data.length;
         document.getElementById("paidCount").innerText = paid;
         document.getElementById("unpaidCount").innerText = unpaid;
         document.getElementById("totalAmount").innerText = totalAmount;
-    }
+      }
 
-    function applyFilters() {
-        const status = document.getElementById("statusFilter").value;
+      function applyFilters() {
+  const status = document.getElementById("statusFilter").value;
+  const fromDate = document.getElementById("fromDate").value;
+  const toDate = document.getElementById("toDate").value;
+  const sortBy = document.getElementById("sortBy").value;
 
-        let filtered = bills;
+  let filtered = [...bills];
 
-        if(status !== "all") {
-            filtered = bills.filter(b => b.status === status);
-        }
+  // ✅ Status Filter
+  if (status !== "all") {
+    filtered = filtered.filter((b) => b.status === status);
+  }
 
-        renderTable(filtered);
-    }
+  // ✅ Start Date Filter
+  if (fromDate) {
+    filtered = filtered.filter((b) => b.date >= fromDate);
+  }
 
-    renderTable(bills);
-</script>
+  // ✅ End Date Filter
+  if (toDate) {
+    filtered = filtered.filter((b) => b.date <= toDate);
+  }
 
-</body>
+  // ✅ Sorting
+  if (sortBy === "date") {
+    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+  } else if (sortBy === "amount") {
+    filtered.sort((a, b) => a.amount - b.amount);
+  }
+
+  renderTable(filtered);
+}
+
+applyFilters(); // Initial render
+    </script>
+  </body>
 </html>

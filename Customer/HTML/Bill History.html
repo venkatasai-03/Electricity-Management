@@ -46,20 +46,27 @@
     <div class="container">
       <!-- Filters -->
       <div class="filters">
-        <input type="date" id="fromDate" placeholder="Start Date" />
-<input type="date" id="toDate" placeholder="End Date" />
+        <div>
+          <label>From Date</label><br />
+          <input type="date" id="fromDate" />
+        </div>
 
-<select id="statusFilter">
-  <option value="all">All Status</option>
-  <option value="paid">Paid</option>
-  <option value="unpaid">Unpaid</option>
-</select>
+        <div>
+          <label>To Date</label><br />
+          <input type="date" id="toDate" />
+        </div>
 
-<select id="sortBy">
-  <option value="">Select</option>
-  <option value="date">Bill Date</option>
-  <option value="amount">Amount</option>
-</select>   
+        <select id="statusFilter">
+          <option value="all">All Status</option>
+          <option value="paid">Paid</option>
+          <option value="unpaid">Unpaid</option>
+        </select>
+
+        <select id="sortBy">
+          <option value="">Sort By</option>
+          <option value="date">Bill Date</option>
+          <option value="amount">Amount</option>
+        </select>
 
         <button onclick="applyFilters()">Apply</button>
       </div>
@@ -76,12 +83,12 @@
       <table id="billTable">
         <thead>
           <tr>
-            <th>Bill No</th>
-            <th>Bill Date</th>
+            <th onclick="sortTable('no')">Bill No</th>
+            <th onclick="sortTable('date')">Bill Date</th>
             <th>Period</th>
-            <th>Due Date</th>
-            <th>Amount</th>
-            <th>Status</th>
+            <th onclick="sortTable('due')">Due Date</th>
+            <th onclick="sortTable('amount')">Amount</th>
+            <th onclick="sortTable('status')">Status</th>
             <th>Payment Date</th>
             <th>Mode</th>
             <th>Action</th>
@@ -212,39 +219,94 @@
       }
 
       function applyFilters() {
-  const status = document.getElementById("statusFilter").value;
-  const fromDate = document.getElementById("fromDate").value;
-  const toDate = document.getElementById("toDate").value;
-  const sortBy = document.getElementById("sortBy").value;
+        const status = document.getElementById("statusFilter").value;
+        const fromDate = document.getElementById("fromDate").value;
+        const toDate = document.getElementById("toDate").value;
+        const sortBy = document.getElementById("sortBy").value;
 
-  let filtered = [...bills];
+        let filtered = [...bills];
 
-  // ✅ Status Filter
-  if (status !== "all") {
-    filtered = filtered.filter((b) => b.status === status);
-  }
+        // ✅ Status Filter
+        if (status !== "all") {
+          filtered = filtered.filter((b) => b.status === status);
+        }
 
-  // ✅ Start Date Filter
-  if (fromDate) {
-    filtered = filtered.filter((b) => b.date >= fromDate);
-  }
+        // ✅ Start Date Filter
+        if (fromDate) {
+          filtered = filtered.filter((b) => b.date >= fromDate);
+        }
 
-  // ✅ End Date Filter
-  if (toDate) {
-    filtered = filtered.filter((b) => b.date <= toDate);
-  }
+        // ✅ End Date Filter
+        if (toDate) {
+          filtered = filtered.filter((b) => b.date <= toDate);
+        }
 
-  // ✅ Sorting
-  if (sortBy === "date") {
-    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
-  } else if (sortBy === "amount") {
-    filtered.sort((a, b) => a.amount - b.amount);
-  }
+        // ✅ Sorting
+        if (sortBy === "date") {
+          filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+        } else if (sortBy === "amount") {
+          filtered.sort((a, b) => a.amount - b.amount);
+        }
 
-  renderTable(filtered);
-}
+        renderTable(filtered);
+      }
 
-applyFilters(); // Initial render
+      let currentSort = {
+        field: "",
+        order: "asc",
+      };
+
+      function sortTable(field) {
+        // Toggle order
+        if (currentSort.field === field) {
+          currentSort.order = currentSort.order === "asc" ? "desc" : "asc";
+        } else {
+          currentSort.field = field;
+          currentSort.order = "asc";
+        }
+
+        let sorted = [...bills];
+
+        sorted.sort((a, b) => {
+          let valA = a[field];
+          let valB = b[field];
+
+          // Convert dates properly
+          if (field === "date" || field === "due" || field === "payDate") {
+            valA = new Date(valA);
+            valB = new Date(valB);
+          }
+
+          // String comparison
+          if (typeof valA === "string") {
+            return currentSort.order === "asc"
+              ? valA.localeCompare(valB)
+              : valB.localeCompare(valA);
+          }
+
+          // Number/date comparison
+          return currentSort.order === "asc" ? valA - valB : valB - valA;
+        });
+
+        // inside sortTable()
+        document
+          .querySelectorAll("th")
+          .forEach(
+            (th) =>
+              (th.innerText = th.innerText.replace(" ↑", "").replace(" ↓", "")),
+          );
+
+        const ths = document.querySelectorAll("th");
+        ths.forEach((th) => {
+          if (th.innerText.toLowerCase().includes(field)) {
+            th.innerText += currentSort.order === "asc" ? " ↑" : " ↓";
+          }
+        });
+
+        renderTable(sorted);
+      }
+
+      applyFilters(); // Initial render
     </script>
   </body>
 </html>

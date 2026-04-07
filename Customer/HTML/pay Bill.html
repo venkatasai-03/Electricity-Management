@@ -67,24 +67,57 @@
 
       <!-- Payment Form -->
       <h2>Card Details</h2>
+
       <div class="form-grid">
-        <input type="text" id="name" placeholder="Cardholder Name" />
-        <input type="text" id="card" placeholder="Card Number" />
-        <input type="text" id="expiry" placeholder="MM/YY" />
-        <input type="password" id="cvv" placeholder="CVV" />
+        <input
+          type="text"
+          id="name"
+          placeholder="Cardholder Name"
+          oninput="validate(false)"
+        />
+        <input
+          type="text"
+          id="card"
+          placeholder="Card Number"
+          oninput="validate(false)"
+        />
+        <input
+          type="text"
+          id="expiry"
+          placeholder="MM/YY"
+          oninput="validate(false)"
+        />
+        <input
+          type="password"
+          id="cvv"
+          placeholder="CVV"
+          oninput="validate(false)"
+        />
       </div>
 
       <p class="error" id="errorMsg"></p>
 
-      <button class="btn" onclick="validate()">Pay Now</button>
+      <button class="btn" onclick="validate(true)">Pay Now</button>
+      <button class="btn" onclick="showUpi()">Pay via UPI</button>
     </div>
 
     <!-- Confirmation Modal -->
     <div class="modal" id="confirmModal">
       <div class="modal-content">
         <p>Confirm payment of ₹4500?</p>
-        <button onclick="paySuccess()">Confirm</button>
+        <button onclick="showSuccess()">Confirm</button>
         <button onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- UPI Modal -->
+    <div class="modal" id="upiModal">
+      <div class="modal-content">
+        <h3>Enter UPI ID</h3>
+        <input type="text" id="upiId" placeholder="example@upi" />
+        <p class="error" id="upiError"></p>
+        <button onclick="validateUpi()">Pay</button>
+        <button onclick="closeUpi()">Cancel</button>
       </div>
     </div>
 
@@ -137,7 +170,41 @@
       <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
     </footer>
     <script>
-      function validate() {
+      function showUpi() {
+        document.getElementById("upiModal").style.display = "block";
+      }
+
+      function closeUpi() {
+        document.getElementById("upiModal").style.display = "none";
+        document.getElementById("upiError").innerHTML = "";
+      }
+
+      // UPI Validation
+      function validateUpi() {
+        let upi = document.getElementById("upiId").value.trim();
+        let error = document.getElementById("upiError");
+
+        // UPI regex (basic)
+        let upiPattern = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
+
+        if (!upi) {
+          error.innerHTML = "UPI ID is required";
+          return;
+        }
+
+        if (!upiPattern.test(upi)) {
+          error.innerHTML = "Invalid UPI ID format (e.g., name@bank)";
+          return;
+        }
+
+        // Success
+        error.innerHTML = "";
+        document.getElementById("upiModal").style.display = "none";
+
+        // Show success (same as card)
+        showSuccess();
+      }
+      function validate(showModal) {
         let name = document.getElementById("name").value;
         let card = document.getElementById("card").value;
         let expiry = document.getElementById("expiry").value;
@@ -151,9 +218,10 @@
           errorMessages.push("All fields are required");
         }
 
-
         if (name && !/^[a-zA-Z\s]{2,16}$/.test(name)) {
-          errorMessages.push("Name can only contain letters and spaces and must be 2-16 characters");
+          errorMessages.push(
+            "Name can only contain letters and spaces and must be 2-16 characters",
+          );
         }
         // Card validation
         if (card && !/^\d{16}$/.test(card)) {
@@ -174,12 +242,18 @@
           let now = new Date();
           let currentMonth = now.getMonth() + 1;
           let currentYear = now.getFullYear();
+          let maxYear = currentYear + 10;
 
           if (
             year < currentYear ||
             (year === currentYear && month < currentMonth)
           ) {
             errorMessages.push("Card is expired");
+          }
+          if (year > maxYear) {
+            errorMessages.push(
+              "Expiry year cannot be more than 10 years in future",
+            );
           }
         }
 
@@ -196,17 +270,30 @@
 
         // If no errors
         error.innerHTML = "";
-        document.getElementById("confirmModal").style.display = "block";
+        if (showModal) {
+          document.getElementById("confirmModal").style.display = "block";
+        }
+
+        return true;
       }
 
       function closeModal() {
         document.getElementById("confirmModal").style.display = "none";
       }
 
-      function paySuccess() {
+      function showSuccess() {
         document.getElementById("confirmModal").style.display = "none";
+        document.getElementById("upiModal").style.display = "none";
+
         document.querySelector(".container").style.display = "none";
         document.getElementById("successBox").style.display = "block";
+
+        // Optional: generate dynamic IDs
+        document.querySelector("#successBox p:nth-child(2)").innerText =
+          "Payment ID: PAY" + Math.floor(Math.random() * 100000);
+
+        document.querySelector("#successBox p:nth-child(3)").innerText =
+          "Transaction ID: TXN" + Math.floor(Math.random() * 100000);
       }
     </script>
   </body>

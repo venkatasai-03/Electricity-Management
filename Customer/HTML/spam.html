@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Consumer</title>
+
+    <link rel="stylesheet" href="spam.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <script>
+      // ================= FORM VALIDATION =================
+      function validateForm() {
+        let user = document.getElementById("name").value.trim();
+        let error = document.getElementById("nameError");
+
+        error.textContent = "";
+
+        if (user === "") {
+          error.textContent = "User name is required";
+          return false;
+        }
+
+        if (user.length < 5) {
+          error.textContent = "User ID must be at least 5 characters";
+          return false;
+        }
+
+        if (user.length > 20) {
+          error.textContent = "User ID must be less than 20 characters";
+          return false;
+        }
+
+        // Show success modal (correct one)
+        showSuccessModal();
+        return false; // prevent actual form submission
+      }
+
+      // ================= SUCCESS MODAL =================
+      function showSuccessModal() {
+        document.getElementById("confirm_m1").style.display = "flex";
+      }
+
+      function closeModal1() {
+        document.getElementById("confirm_m1").style.display = "none";
+        document.getElementById("requestForm").reset();
+        document.getElementById("nameError").textContent = "";
+      }
+
+      // ================= LOGOUT =================
+      function handleLogout() {
+        document.getElementById("confirm_m").style.display = "flex";
+      }
+
+      function cancel_lg() {
+        document.getElementById("confirm_m").style.display = "none";
+      }
+
+      function c_logout() {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = "../LOGIN/loginPage.html";
+      }
+
+      // ================= OPTIONAL UX IMPROVEMENTS =================
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        let logoutModal = document.getElementById("confirm_m");
+        let successModal = document.getElementById("confirm_m1");
+
+        if (event.target === logoutModal) {
+          logoutModal.style.display = "none";
+        }
+
+        if (event.target === successModal) {
+          successModal.style.display = "none";
+        }
+      };
+    </script>
+  </head>
+
+  <body>
+    <!-- TOP NAVBAR -->
+    <div class="top-navbar">
+      <div class="logo-section">
+        <div class="logo">
+          <i class="fa-solid fa-bolt" style="color: rgb(255, 212, 59)"></i>
+        </div>
+        <div>
+          <h2>BillGate</h2>
+          <div class="tagline">
+            One <span class="highlight">Gate</span>way. Pay Your
+            <span class="highlight">Bill</span>s.
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn" onclick="handleLogout()">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+
+    <!-- LOGOUT MODAL -->
+    <div class="model" id="confirm_m">
+      <div class="model-content">
+        <p>Confirm you want to logout!</p>
+        <br /><br />
+        <button onclick="c_logout()" class="c_btn">Confirm</button>
+        <button onclick="cancel_lg()" class="c_btn">Cancel</button>
+      </div>
+    </div>
+
+    <!-- MENU BAR -->
+    <div class="menu-bar">
+      <a href="/Customer/home/home.html"
+        ><i class="fa fa-home"></i> Dashboard</a
+      >
+      <a href="/Customer/VIEW BILLS/view_billss.html"
+        ><i class="fa fa-file-invoice"></i> View Bills</a
+      >
+      <a href="/Customer/PAY BILL/pay_bill.html"
+        ><i class="fa fa-credit-card"></i> Pay Bill</a
+      >
+      <a href="/Customer/BILL HISTORY/bill history.html"
+        ><i class="fa fa-history"></i> Bill History</a
+      >
+      <a href="/Customer/register-complaint/register-complaint.html"
+        ><i class="fa fa-exclamation-circle"></i> Register Complaint</a
+      >
+      <a href="/Customer/complaint-status/complaint-status.html"
+        ><i class="fa fa-search"></i> Complaint Status</a
+      >
+      <a href="/Customer/REQUEST/request.html" class="active"
+        ><i class="fa fa-plug"></i> Connection Request</a
+      >
+
+      <div class="profile">
+        <button class="profile-btn">
+          <i class="fa fa-user-circle"></i> Profile ▾
+        </button>
+        <div class="dropdown">
+          <a href="#"><i class="fa fa-id-card"></i> View Profile</a>
+          <a href="#"><i class="fa fa-edit"></i> Edit Profile</a>
+          <a href="#" onclick="handleLogout()">
+            <i class="fa fa-sign-out-alt"></i> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="container">
+      <h2>Request for Adding Consumer</h2>
+
+      <form id="requestForm" onsubmit="return validateForm();">
+        <label>User Name</label>
+        <input type="text" id="name" placeholder="Enter your User Name" />
+        <small id="nameError" class="error"></small>
+
+        <label>Request Message</label>
+        <textarea id="message" placeholder="Write your Request..."></textarea>
+
+        <button type="submit">Submit Request</button>
+      </form>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="modal1" id="confirm_m1">
+      <div class="modal-content1">
+        <p>Request sent successfully ✅</p>
+        <br /><br />
+        <button onclick="closeModal1()" class="cbtn1">OK</button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>BillGate</h3>
+          <p>
+            Smart platform to manage electricity bills, payments, and complaints
+            easily.
+          </p>
+        </div>
+
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <p><a href="/Customer/home/home.html">Dashboard</a></p>
+          <p><a href="/Customer/VIEW BILLS/view_billss.html">View Bills</a></p>
+          <p><a href="/Customer/PAY BILL/pay_bill.html">Pay Bill</a></p>
+          <p>
+            <a href="/Customer/complaint-status/complaint-status.html"
+              >Complaints</a
+            >
+          </p>
+        </div>
+
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>Email: support@billgate.com</p>
+          <p>Phone: +91 9876543210</p>
+        </div>
+
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <p><a href="#">Facebook</a></p>
+          <p><a href="#">Twitter</a></p>
+          <p><a href="#">LinkedIn</a></p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">© 2026 BillGate | All Rights Reserved</div>
+    </footer>
+  </body>
+</html>
